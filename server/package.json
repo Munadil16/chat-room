@@ -6,12 +6,20 @@
     "scripts": {
         "start": "node dist/index.js",
         "build": "tsc -b",
-        "dev": "pnpm run build && pnpm run start"
+        "dev": "nodemon --exec ts-node src/index.ts"
     },
     "keywords": [],
     "author": "Munadil",
     "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "ws": "^8.18.0"
+    },
     "devDependencies": {
+        "@types/node": "18",
+        "@types/ws": "^8.5.13",
+        "nodemon": "^3.1.7",
+        "ts-node": "^10.9.2",
         "typescript": "^5.7.2"
     }
 }
