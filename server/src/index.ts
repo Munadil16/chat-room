@@ -59,10 +59,23 @@ wss.on("connection", (ws) => {
 
                 ws.send(
                     JSON.stringify({
+                        roomId,
                         userId,
                         message: "Room joined successfully",
                     })
                 );
+
+                break;
+            }
+
+            case "message": {
+                const userId = parsedData.payload?.userId;
+                const roomId = parsedData.payload?.roomId;
+                const message = parsedData.payload?.message;
+
+                const users = rooms.get(roomId);
+                const receiver = users?.find((user) => userId != user.userId);
+                receiver?.socket.send(JSON.stringify({ message }));
 
                 break;
             }
