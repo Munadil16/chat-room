@@ -1,17 +1,75 @@
 import dotenv from "dotenv";
-import { WebSocketServer } from "ws";
+import { randomUUID, UUID } from "node:crypto";
+import { WebSocketServer, WebSocket } from "ws";
 
 dotenv.config();
 
 const PORT = (process.env.PORT ?? 3000) as number;
 const wss = new WebSocketServer({ port: PORT });
 
+interface IUser {
+    name: string;
+    userId: string;
+    socket: WebSocket;
+}
+
+const rooms = new Map<string, Array<IUser>>();
+
 wss.on("connection", (ws) => {
     ws.on("error", (error) => console.error(error));
 
     ws.on("message", (data) => {
-        console.log(data.toString());
+        const parsedData = JSON.parse(data.toString());
+
+        switch (parsedData.type) {
+            case "create": {
+                const roomId = randomUUID().substring(0, 8);
+                const userId = randomUUID().substring(0, 8);
+                const name = parsedData.payload?.name;
+                rooms.set(roomId, [{ name, userId, socket: ws }]);
+
+                ws.send(
+                    JSON.stringify({
+                        roomId,
+                        userId,
+                        message: "Room created successfully",
+                    })
+                );
+
+                break;
+            }
+
+            case "join": {
+                const name = parsedData.payload?.name;
+                const roomId = parsedData.payload?.roomId;
+                const userId = randomUUID().substring(0, 8);
+                const room = rooms.get(roomId);
+
+                if (!room) {
+                    ws.send(JSON.stringify({ message: "Room not found" }));
+                    break;
+                }
+
+                if (room.length >= 2) {
+                    ws.send(JSON.stringify({ message: "Room is full" }));
+                    break;
+                }
+
+                rooms.set(roomId, [...room, { name, userId, socket: ws }]);
+
+                ws.send(
+                    JSON.stringify({
+                        userId,
+                        message: "Room joined successfully",
+                    })
+                );
+
+                break;
+            }
+        }
     });
 
-    ws.send("Hello from server");
+    ws.on("close", () => {
+        console.log("Socket closed");
+    });
 });
