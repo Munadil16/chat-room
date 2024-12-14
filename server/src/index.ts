@@ -46,12 +46,22 @@ wss.on("connection", (ws) => {
                 const room = rooms.get(roomId);
 
                 if (!room) {
-                    ws.send(JSON.stringify({ message: "Room not found" }));
+                    ws.send(
+                        JSON.stringify({
+                            success: false,
+                            message: "Room not found",
+                        })
+                    );
                     break;
                 }
 
                 if (room.length >= 2) {
-                    ws.send(JSON.stringify({ message: "Room is full" }));
+                    ws.send(
+                        JSON.stringify({
+                            success: false,
+                            message: "Room is full",
+                        })
+                    );
                     break;
                 }
 
@@ -61,6 +71,7 @@ wss.on("connection", (ws) => {
                     JSON.stringify({
                         roomId,
                         userId,
+                        success: true,
                         message: "Room joined successfully",
                     })
                 );
@@ -82,7 +93,5 @@ wss.on("connection", (ws) => {
         }
     });
 
-    ws.on("close", () => {
-        console.log("Socket closed");
-    });
+    ws.on("close", () => {});
 });
