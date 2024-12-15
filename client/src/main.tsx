@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "@/index.css";
 import App from "@/App";
 import { JoinRoom } from "@/pages/join-room";
+import { CreateRoom } from "@/pages/create-room";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -16,7 +17,11 @@ createRoot(document.getElementById("root")!).render(
                 <BrowserRouter>
                     <Routes>
                         <Route path="/" element={<App />}>
-                            <Route path="/room/join" element={<JoinRoom />} />
+                            <Route path="room/join" element={<JoinRoom />} />
+                            <Route
+                                path="room/create"
+                                element={<CreateRoom />}
+                            />
                         </Route>
                     </Routes>
                 </BrowserRouter>

@@ -5,5 +5,6 @@ export const userAtom = atom({
     default: {
         name: "",
         roomId: "",
+        userId: "",
     },
 });
