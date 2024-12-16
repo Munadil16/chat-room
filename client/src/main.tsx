@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "@/index.css";
 import App from "@/App";
+import { ChatRoom } from "@/pages/chat-room";
 import { JoinRoom } from "@/pages/join-room";
 import { CreateRoom } from "@/pages/create-room";
 import { Toaster } from "@/components/ui/sonner";
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
                                 path="room/create"
                                 element={<CreateRoom />}
                             />
+                            <Route path="room/chat" element={<ChatRoom />} />
                         </Route>
                     </Routes>
                 </BrowserRouter>

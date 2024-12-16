@@ -31,6 +31,7 @@ export const CreateRoom = () => {
     const handleCreateRoom = () => {
         if (!user.name.trim()) {
             toast.error("Name is required");
+            return;
         }
 
         if (ws.current?.readyState === WebSocket.OPEN) {

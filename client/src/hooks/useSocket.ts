@@ -18,6 +18,10 @@ export const useSocket = ({ onMessageHandler }: IUseSocket) => {
             };
         }
 
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
         return () => {
             if (
                 ws.readyState === WebSocket.OPEN ||
@@ -26,7 +30,7 @@ export const useSocket = ({ onMessageHandler }: IUseSocket) => {
                 ws.close();
             }
         };
-    }, []);
+    }, [onMessageHandler]);
 
     return socketRef;
 };

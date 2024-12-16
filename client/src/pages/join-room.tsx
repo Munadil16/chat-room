@@ -10,6 +10,7 @@ interface IJoinRoomResponse {
     message: string;
     success: boolean;
     userId: string;
+    roomId: string;
 }
 
 export const JoinRoom = () => {
@@ -20,10 +21,11 @@ export const JoinRoom = () => {
         success,
         message,
         userId,
+        roomId,
     }: IJoinRoomResponse) => {
         if (success) {
             toast.success(message);
-            setUser({ ...user, userId });
+            setUser({ ...user, userId, roomId });
             navigate("/room/chat");
         } else {
             toast.error(message);

@@ -86,7 +86,7 @@ wss.on("connection", (ws) => {
 
                 const users = rooms.get(roomId);
                 const receiver = users?.find((user) => userId != user.userId);
-                receiver?.socket.send(JSON.stringify({ message }));
+                receiver?.socket.send(JSON.stringify({ message, userId }));
 
                 break;
             }
