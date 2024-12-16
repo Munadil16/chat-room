@@ -34,8 +34,8 @@ export const CreateRoom = () => {
             return;
         }
 
-        if (ws.current?.readyState === WebSocket.OPEN) {
-            ws.current.send(
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(
                 JSON.stringify({ type: "create", payload: { name: user.name } })
             );
         }

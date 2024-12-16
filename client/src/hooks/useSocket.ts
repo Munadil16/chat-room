@@ -1,36 +1,30 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo } from "react";
+import { initWebSocketConnection } from "@/lib/websocket";
 
 interface IUseSocket {
     onMessageHandler?: (data: any) => void;
 }
 
 export const useSocket = ({ onMessageHandler }: IUseSocket) => {
-    const socketRef = useRef<WebSocket | null>(null);
+    const ws = useMemo(
+        () => initWebSocketConnection(import.meta.env.VITE_BACKEND_URL),
+        []
+    );
 
     useEffect(() => {
-        const ws = new WebSocket(import.meta.env.VITE_BACKEND_URL);
-        socketRef.current = ws;
-
-        if (onMessageHandler) {
-            ws.onmessage = (e) => {
+        if (ws && onMessageHandler) {
+            const messageHandler = (e: MessageEvent) => {
                 const parsedData = JSON.parse(e.data);
                 onMessageHandler(parsedData);
             };
+
+            ws.addEventListener("message", messageHandler);
+
+            return () => {
+                ws.removeEventListener("message", messageHandler);
+            };
         }
+    }, [onMessageHandler, ws]);
 
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        return () => {
-            if (
-                ws.readyState === WebSocket.OPEN ||
-                ws.readyState === WebSocket.CONNECTING
-            ) {
-                ws.close();
-            }
-        };
-    }, [onMessageHandler]);
-
-    return socketRef;
+    return ws;
 };

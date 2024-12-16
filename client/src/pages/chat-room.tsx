@@ -29,8 +29,8 @@ export const ChatRoom = () => {
             return;
         }
 
-        if (ws.current?.readyState === WebSocket.OPEN) {
-            ws.current.send(
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(
                 JSON.stringify({
                     type: "message",
                     payload: { userId, roomId, message: msg },
@@ -48,7 +48,7 @@ export const ChatRoom = () => {
 
     return (
         <main className="flex h-dvh items-center justify-center">
-            <section className="scrollbar-hide flex h-[95dvh] w-[90vw] flex-col justify-between overflow-y-scroll scroll-smooth rounded-3xl border sm:h-[75dvh] sm:w-[55vw] md:w-[40vw] lg:w-[35vw] xl:w-[30vw]">
+            <section className="flex h-[95dvh] w-[90vw] flex-col justify-between overflow-y-scroll scroll-smooth rounded-3xl border scrollbar-hide sm:h-[75dvh] sm:w-[55vw] md:w-[40vw] lg:w-[35vw] xl:w-[30vw]">
                 <div>
                     <p className="sticky top-0 z-50 mb-2 flex items-center rounded-t-3xl border-b bg-zinc-950 p-4 pl-4 text-lg font-medium">
                         Room ID:
@@ -62,7 +62,7 @@ export const ChatRoom = () => {
                                     key={index}
                                     className="flex justify-end px-3 py-1"
                                 >
-                                    <p className="w-fit max-w-[60%] rounded-lg bg-purple-500 px-3 py-1 text-lg font-medium">
+                                    <p className="w-fit max-w-[60%] break-all rounded-lg bg-purple-500 px-3 py-1 text-lg font-medium">
                                         {message.message}
                                     </p>
                                 </div>
@@ -74,7 +74,7 @@ export const ChatRoom = () => {
                                 key={index}
                                 className="flex justify-start px-3 py-1"
                             >
-                                <p className="w-fit max-w-[60%] rounded-lg bg-neutral-900 px-3 py-1 text-lg font-medium">
+                                <p className="w-fit max-w-[60%] break-all rounded-lg bg-neutral-900 px-3 py-1 text-lg font-medium">
                                     {message.message}
                                 </p>
                             </div>
