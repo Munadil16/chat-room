@@ -1,16 +1,27 @@
 import { toast } from "sonner";
+import { useRecoilState } from "recoil";
 import { userAtom } from "@/store/atoms/user";
 import { Input } from "@/components/ui/input";
 import { useSocket } from "@/hooks/useSocket";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Copy, Send, Smile } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import AyaseImage from "@/assets/images/ayase.jpeg";
 import OkarunImage from "@/assets/images/okarun.jpeg";
 import { messagesAtom } from "@/store/atoms/messages";
-import { useRecoilState, useRecoilValue } from "recoil";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface IChatRoomResponse {
     message: string;
@@ -20,7 +31,7 @@ interface IChatRoomResponse {
 export const ChatRoom = () => {
     const navigate = useNavigate();
     const [msg, setMsg] = useState<string>("");
-    const { userId, roomId } = useRecoilValue(userAtom);
+    const [user, setUser] = useRecoilState(userAtom);
     const chatRef = useRef<HTMLDivElement | null>(null);
     const [messages, setMessages] = useRecoilState(messagesAtom);
     const [showEmojiModal, setShowEmojiModal] = useState<boolean>(false);
@@ -41,14 +52,18 @@ export const ChatRoom = () => {
             ws.send(
                 JSON.stringify({
                     type: "message",
-                    payload: { userId, roomId, message: msg },
+                    payload: {
+                        userId: user.userId,
+                        roomId: user.roomId,
+                        message: msg,
+                    },
                 })
             );
         }
 
         setMessages((prevMessages) => [
             ...prevMessages,
-            { message: msg, userId },
+            { message: msg, userId: user.userId },
         ]);
 
         setMsg("");
@@ -56,7 +71,7 @@ export const ChatRoom = () => {
 
     const copyRoomId = () => {
         navigator.clipboard
-            .writeText(roomId)
+            .writeText(user.roomId)
             .then(() => toast.success("Room id copied to clipboard"));
     };
 
@@ -65,6 +80,39 @@ export const ChatRoom = () => {
         setShowEmojiModal(false);
     };
 
+    const handleExitClick = () => {
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(
+                JSON.stringify({
+                    type: "close",
+                    payload: { roomId: user.roomId, userId: user.userId },
+                })
+            );
+
+            setUser({ name: "", roomId: "", userId: "" });
+
+            navigate("/");
+        }
+    };
+
+    useEffect(() => {
+        if (!user.roomId.trim()) {
+            navigate("/");
+        }
+    }, [user.roomId, navigate]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (_e: BeforeUnloadEvent) => {
+            handleExitClick();
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
+
     useEffect(() => {
         chatRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -72,28 +120,56 @@ export const ChatRoom = () => {
     return (
         <main className="flex h-dvh items-center justify-center">
             <section className="flex h-[95dvh] w-[90vw] flex-col justify-between overflow-y-scroll scroll-smooth rounded-3xl border scrollbar-hide sm:h-[80dvh] sm:w-[60vw] md:w-[45vw] lg:w-[40vw] xl:w-[35vw]">
+                {/* RoomId bar and Chatbox */}
                 <div>
                     <div className="sticky top-0 z-50 flex items-center justify-between border-b bg-zinc-950 p-4">
                         <p className="flex items-center rounded-t-3xl text-lg font-medium">
                             Room ID:
-                            <span className="ml-2 text-white/80">{roomId}</span>
+                            <span className="ml-2 text-white/80">
+                                {user.roomId}
+                            </span>
                             <Copy
                                 className="ml-2 w-4 cursor-pointer hover:text-white/80"
                                 onClick={copyRoomId}
                             />
                         </p>
 
-                        <Button
-                            className="bg-purple-400 px-5 text-base font-medium hover:bg-purple-300"
-                            size={"sm"}
-                            onClick={() => navigate("/")}
-                        >
-                            Exit
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button
+                                    className="bg-purple-400 px-5 text-base font-medium hover:bg-purple-300"
+                                    size={"sm"}
+                                >
+                                    Exit
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        Are you absolutely sure?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        You will redirected to Home page and
+                                        your chat history will be deleted
+                                        forever.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                        Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={handleExitClick}
+                                    >
+                                        Continue
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </div>
 
                     {messages.map((message, index) => {
-                        if (message.userId === userId) {
+                        if (message.userId === user.userId) {
                             return (
                                 <div
                                     key={index}
@@ -133,6 +209,7 @@ export const ChatRoom = () => {
                     <div ref={chatRef}></div>
                 </div>
 
+                {/* Text-box */}
                 <div className="sticky bottom-0 mt-2 flex items-center bg-zinc-900 px-5 py-2">
                     <Smile
                         className="w-6 cursor-pointer text-purple-500"

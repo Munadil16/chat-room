@@ -90,6 +90,26 @@ wss.on("connection", (ws) => {
 
                 break;
             }
+
+            case "close": {
+                const userId = parsedData.payload?.userId;
+                const roomId = parsedData.payload?.roomId;
+                const room = rooms.get(roomId);
+
+                if (room) {
+                    const updatedRoom = room.filter(
+                        (user) => user.userId != userId
+                    );
+
+                    ws.close();
+
+                    if (updatedRoom.length === 0) {
+                        rooms.delete(roomId);
+                    } else {
+                        rooms.set(roomId, updatedRoom);
+                    }
+                }
+            }
         }
     });
 
