@@ -122,7 +122,7 @@ export const ChatRoom = () => {
             <section className="flex h-[95dvh] w-[90vw] flex-col justify-between overflow-y-scroll scroll-smooth rounded-3xl border scrollbar-hide sm:h-[80dvh] sm:w-[60vw] md:w-[45vw] lg:w-[40vw] xl:w-[35vw]">
                 {/* RoomId bar and Chatbox */}
                 <div>
-                    <div className="sticky top-0 z-50 flex items-center justify-between border-b bg-zinc-950 p-4">
+                    <div className="sticky top-0 z-50 mb-2 flex items-center justify-between border-b bg-zinc-950 p-4">
                         <p className="flex items-center rounded-t-3xl text-lg font-medium">
                             Room ID:
                             <span className="ml-2 text-white/80">

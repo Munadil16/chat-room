@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { useRecoilState } from "recoil";
+import { Header } from "@/components/header";
 import { Input } from "@/components/ui/input";
 import { userAtom } from "@/store/atoms/user";
 import { useSocket } from "@/hooks/useSocket";
@@ -42,39 +43,45 @@ export const CreateRoom = () => {
     };
 
     return (
-        <main className="flex h-[90dvh] items-center justify-center">
-            <section className="flex flex-col items-center gap-5">
-                <h1 className="text-4xl font-medium sm:text-5xl">
-                    Create a <span className="text-violet-600">room</span>
-                </h1>
+        <>
+            <Header />
 
-                <Input
-                    placeholder="Enter your name"
-                    value={user.name}
-                    onChange={(e) => setUser({ ...user, name: e.target.value })}
-                />
+            <main className="flex h-[90dvh] items-center justify-center">
+                <section className="flex flex-col items-center gap-5">
+                    <h1 className="text-4xl font-medium sm:text-5xl">
+                        Create a <span className="text-violet-600">room</span>
+                    </h1>
 
-                <Button
-                    className="w-full bg-violet-400 text-lg font-medium hover:bg-violet-300"
-                    onClick={handleCreateRoom}
-                >
-                    Create
-                </Button>
+                    <Input
+                        placeholder="Enter your name"
+                        value={user.name}
+                        onChange={(e) =>
+                            setUser({ ...user, name: e.target.value })
+                        }
+                    />
 
-                <p className="text-sm text-white/80">
-                    (Currently each room can only have 2 participants)
-                </p>
-
-                <p>
-                    Join a room?
-                    <Link
-                        to={"/room/join"}
-                        className="ml-2 font-semibold text-violet-600 underline"
+                    <Button
+                        className="w-full bg-violet-400 text-lg font-medium hover:bg-violet-300"
+                        onClick={handleCreateRoom}
                     >
-                        Join
-                    </Link>
-                </p>
-            </section>
-        </main>
+                        Create
+                    </Button>
+
+                    <p className="text-sm text-white/80">
+                        (Currently each room can only have 2 participants)
+                    </p>
+
+                    <p>
+                        Join a room?
+                        <Link
+                            to={"/room/join"}
+                            className="ml-2 font-semibold text-violet-600 underline"
+                        >
+                            Join
+                        </Link>
+                    </p>
+                </section>
+            </main>
+        </>
     );
 };
