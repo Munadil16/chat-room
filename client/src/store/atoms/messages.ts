@@ -7,5 +7,5 @@ interface IMessage {
 
 export const messagesAtom = atom<IMessage[]>({
     key: "messagesAtom",
-    default: [{ message: "", userId: "" }],
+    default: [],
 });

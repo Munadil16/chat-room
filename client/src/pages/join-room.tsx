@@ -83,6 +83,10 @@ export const JoinRoom = () => {
                     Join
                 </Button>
 
+                <p className="text-sm text-white/80">
+                    (Currently each room can only have 2 participants)
+                </p>
+
                 <p>
                     Create a room?
                     <Link
