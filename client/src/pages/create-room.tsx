@@ -1,4 +1,6 @@
 import { toast } from "sonner";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 import { useRecoilState } from "recoil";
 import { Header } from "@/components/header";
 import { Input } from "@/components/ui/input";
@@ -16,12 +18,14 @@ interface ICreateRoomResponse {
 export const CreateRoom = () => {
     const navigate = useNavigate();
     const [user, setUser] = useRecoilState(userAtom);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const onMessageHandler = ({
         roomId,
         userId,
         message,
     }: ICreateRoomResponse) => {
+        setLoading((p) => !p);
         toast.success(message);
         setUser({ ...user, roomId, userId });
         navigate("/room/chat");
@@ -30,8 +34,11 @@ export const CreateRoom = () => {
     const ws = useSocket({ onMessageHandler });
 
     const handleCreateRoom = () => {
+        setLoading((p) => !p);
+
         if (!user.name.trim()) {
             toast.error("Name is required");
+            setLoading((p) => !p);
             return;
         }
 
@@ -61,10 +68,17 @@ export const CreateRoom = () => {
                     />
 
                     <Button
-                        className="w-full bg-violet-400 text-lg font-medium hover:bg-violet-300"
+                        className="w-full select-none bg-violet-400 text-lg font-medium hover:bg-violet-300"
                         onClick={handleCreateRoom}
+                        disabled={loading}
                     >
-                        Create
+                        {loading ? (
+                            <>
+                                Creating <Loader className="animate-spin" />
+                            </>
+                        ) : (
+                            "Create"
+                        )}
                     </Button>
 
                     <p className="text-sm text-white/80">

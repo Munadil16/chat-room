@@ -2,7 +2,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import BgImage from "@/assets/images/background.jpg";
 import JoinRoomImage from "@/assets/images/joinroom.png";
 import ChatRoomImage from "@/assets/images/chatroom.png";
 import { ShinyButton } from "@/components/ui/shiny-button";
@@ -17,7 +16,7 @@ export const Home = () => {
 
             <img
                 className="fixed left-0 top-0 -z-10 h-screen w-full"
-                src={BgImage}
+                src={"/background.jpg"}
                 alt="bacgkround image"
                 loading="eager"
             />

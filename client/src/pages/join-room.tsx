@@ -1,4 +1,6 @@
 import { toast } from "sonner";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 import { useRecoilState } from "recoil";
 import { Header } from "@/components/header";
 import { useSocket } from "@/hooks/useSocket";
@@ -17,6 +19,7 @@ interface IJoinRoomResponse {
 export const JoinRoom = () => {
     const navigate = useNavigate();
     const [user, setUser] = useRecoilState(userAtom);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const onMessageHandler = ({
         success,
@@ -26,6 +29,7 @@ export const JoinRoom = () => {
     }: IJoinRoomResponse) => {
         if (success) {
             toast.success(message);
+            setLoading((p) => !p);
             setUser({ ...user, userId, roomId });
             navigate("/room/chat");
         } else {
@@ -36,13 +40,17 @@ export const JoinRoom = () => {
     const ws = useSocket({ onMessageHandler });
 
     const handleJoinRoom = () => {
+        setLoading((p) => !p);
+
         if (!user.name.trim()) {
             toast.error("Name is required");
+            setLoading((p) => !p);
             return;
         }
 
         if (!user.roomId.trim()) {
             toast.error("Room id is required");
+            setLoading((p) => !p);
             return;
         }
 
@@ -83,10 +91,17 @@ export const JoinRoom = () => {
                     />
 
                     <Button
-                        className="w-full bg-violet-400 text-lg font-medium hover:bg-violet-300"
+                        className="w-full select-none bg-violet-400 text-lg font-medium hover:bg-violet-300"
                         onClick={handleJoinRoom}
+                        disabled={loading}
                     >
-                        Join
+                        {loading ? (
+                            <>
+                                Joining <Loader className="animate-spin" />
+                            </>
+                        ) : (
+                            "Join"
+                        )}
                     </Button>
 
                     <p className="text-sm text-white/80">
