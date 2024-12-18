@@ -25,7 +25,7 @@ export const CreateRoom = () => {
         userId,
         message,
     }: ICreateRoomResponse) => {
-        setLoading((p) => !p);
+        setLoading(false);
         toast.success(message);
         setUser({ ...user, roomId, userId });
         navigate("/room/chat");
@@ -33,20 +33,36 @@ export const CreateRoom = () => {
 
     const ws = useSocket({ onMessageHandler });
 
-    const handleCreateRoom = () => {
-        setLoading((p) => !p);
+    const handleCreateRoom = async () => {
+        setLoading(true);
 
         if (!user.name.trim()) {
             toast.error("Name is required");
-            setLoading((p) => !p);
+            setLoading(false);
             return;
         }
 
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(
-                JSON.stringify({ type: "create", payload: { name: user.name } })
-            );
+        // Render's spin up
+        const maxTries = 10;
+        const retryDelay = 5000;
+
+        for (let attempt = 0; attempt < maxTries; attempt++) {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(
+                    JSON.stringify({
+                        type: "create",
+                        payload: { name: user.name },
+                    })
+                );
+
+                return;
+            }
+
+            await new Promise((r) => setTimeout(r, retryDelay));
         }
+
+        toast.error("Server is down. Try again.");
+        setLoading(false);
     };
 
     return (
@@ -69,7 +85,7 @@ export const CreateRoom = () => {
 
                     <Button
                         className="w-full select-none bg-violet-400 text-lg font-medium hover:bg-violet-300"
-                        onClick={handleCreateRoom}
+                        onClick={async () => await handleCreateRoom()}
                         disabled={loading}
                     >
                         {loading ? (
