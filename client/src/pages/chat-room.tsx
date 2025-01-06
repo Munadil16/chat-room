@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Copy, Send, Smile } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import AyaseImage from "@/assets/images/ayase.jpeg";
-import OkarunImage from "@/assets/images/okarun.jpeg";
 import { messagesAtom } from "@/store/atoms/messages";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import {
@@ -181,7 +179,9 @@ export const ChatRoom = () => {
 
                                     <img
                                         className="w-7 select-none rounded-full"
-                                        src={AyaseImage}
+                                        src={
+                                            "https://utfs.io/f/wfg8RkeU3FnYIf3Jas4O9JtfbkTW3cev4SVCDF8H7rBYZAw0"
+                                        }
                                         alt="Ayase momo pfp"
                                     />
                                 </div>
@@ -195,7 +195,9 @@ export const ChatRoom = () => {
                             >
                                 <img
                                     className="w-7 select-none rounded-full"
-                                    src={OkarunImage}
+                                    src={
+                                        "https://utfs.io/f/wfg8RkeU3FnYornIrSLfmKxIdq7OgNASaEi5Zj1M2Le9hGvF"
+                                    }
                                     alt="Ayase momo pfp"
                                 />
 

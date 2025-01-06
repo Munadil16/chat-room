@@ -16,7 +16,9 @@ export const Home = () => {
 
             <img
                 className="fixed left-0 top-0 -z-10 h-screen w-full"
-                src={"/background.jpg"}
+                src={
+                    "https://utfs.io/f/wfg8RkeU3FnY80mzzC5WhRAKyIuNfMZ5Tk1d2q7nXU9YDgFL"
+                }
                 alt="bacgkround image"
                 loading="eager"
             />
