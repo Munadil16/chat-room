@@ -4,7 +4,7 @@ import { Github } from "./svg-icons/github";
 
 export const Footer = () => {
     return (
-        <footer className="flex items-center justify-between px-6 py-5">
+        <footer className="fixed bottom-0 w-full flex items-center justify-between px-6 py-5 sm:static">
             <p className="font-medium text-black">Made by Munadil</p>
 
             <div className="flex items-center gap-6">

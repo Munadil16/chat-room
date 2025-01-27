@@ -1,4 +1,3 @@
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,20 +10,9 @@ export const Home = () => {
     const navigate = useNavigate();
 
     return (
-        <main>
-            <Header />
-
-            <img
-                className="fixed left-0 top-0 -z-10 h-screen w-full"
-                src={
-                    "https://utfs.io/f/wfg8RkeU3FnY80mzzC5WhRAKyIuNfMZ5Tk1d2q7nXU9YDgFL"
-                }
-                alt="bacgkround image"
-                loading="eager"
-            />
-
-            <section className="flex h-[90dvh] flex-col items-center justify-center gap-6 text-center sm:h-[65dvh]">
-                <h1 className="w-[90vw] text-balance font-serif text-6xl tracking-tight text-black/80 sm:w-[70vw] sm:leading-[0.9] md:text-8xl">
+        <main className="bg-gradient-to-t min-h-dvh from-purple-700 from-[10%] via-purple-500 via-[40%] to-purple-300 to-[100%]">
+            <section className="flex pt-10 flex-col items-center justify-center gap-6 text-center h-dvh sm:h-full">
+                <h1 className="w-[90vw] text-balance font-serif text-5xl tracking-tight text-black/80 sm:w-[70vw] sm:leading-[0.9] md:text-8xl">
                     Temporary{" "}
                     <span className="bg-[linear-gradient(90deg,rgba(224,_227,_255,_0)_0%,#485aff80_70%)]">
                         spaces
@@ -55,7 +43,7 @@ export const Home = () => {
                 </div>
             </section>
 
-            <section className="hidden items-center justify-center sm:flex">
+            <section className="hidden py-10 items-center justify-center sm:flex">
                 <img
                     className="relative left-10 w-32 rounded-3xl border border-white sm:left-20 sm:w-56 md:w-64 lg:w-72"
                     src={CreateRoomImage}

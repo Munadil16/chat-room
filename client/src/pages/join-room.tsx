@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Loader } from "lucide-react";
 import { useRecoilState } from "recoil";
-import { Header } from "@/components/header";
 import { useSocket } from "@/hooks/useSocket";
 import { Input } from "@/components/ui/input";
 import { userAtom } from "@/store/atoms/user";
@@ -65,60 +64,56 @@ export const JoinRoom = () => {
     };
 
     return (
-        <>
-            <Header />
+        <main className="flex h-[90dvh] items-center justify-center">
+            <section className="flex flex-col items-center gap-5">
+                <h1 className="text-4xl font-medium sm:text-5xl">
+                    Join a <span className="text-violet-600">room</span>
+                </h1>
 
-            <main className="flex h-[90dvh] items-center justify-center">
-                <section className="flex flex-col items-center gap-5">
-                    <h1 className="text-4xl font-medium sm:text-5xl">
-                        Join a <span className="text-violet-600">room</span>
-                    </h1>
+                <Input
+                    placeholder="Enter your name"
+                    value={user.name}
+                    onChange={(e) =>
+                        setUser({ ...user, name: e.target.value })
+                    }
+                />
 
-                    <Input
-                        placeholder="Enter your name"
-                        value={user.name}
-                        onChange={(e) =>
-                            setUser({ ...user, name: e.target.value })
-                        }
-                    />
+                <Input
+                    placeholder="Enter the room id"
+                    value={user.roomId}
+                    onChange={(e) =>
+                        setUser({ ...user, roomId: e.target.value })
+                    }
+                />
 
-                    <Input
-                        placeholder="Enter the room id"
-                        value={user.roomId}
-                        onChange={(e) =>
-                            setUser({ ...user, roomId: e.target.value })
-                        }
-                    />
+                <Button
+                    className="w-full select-none bg-violet-400 text-lg font-medium hover:bg-violet-300"
+                    onClick={handleJoinRoom}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <>
+                            Joining <Loader className="animate-spin" />
+                        </>
+                    ) : (
+                        "Join"
+                    )}
+                </Button>
 
-                    <Button
-                        className="w-full select-none bg-violet-400 text-lg font-medium hover:bg-violet-300"
-                        onClick={handleJoinRoom}
-                        disabled={loading}
+                <p className="text-sm text-white/80">
+                    (Currently each room can only have 2 participants)
+                </p>
+
+                <p>
+                    Create a room?
+                    <Link
+                        to={"/room/create"}
+                        className="ml-2 font-semibold text-violet-600 underline"
                     >
-                        {loading ? (
-                            <>
-                                Joining <Loader className="animate-spin" />
-                            </>
-                        ) : (
-                            "Join"
-                        )}
-                    </Button>
-
-                    <p className="text-sm text-white/80">
-                        (Currently each room can only have 2 participants)
-                    </p>
-
-                    <p>
-                        Create a room?
-                        <Link
-                            to={"/room/create"}
-                            className="ml-2 font-semibold text-violet-600 underline"
-                        >
-                            Create
-                        </Link>
-                    </p>
-                </section>
-            </main>
-        </>
+                        Create
+                    </Link>
+                </p>
+            </section>
+        </main>
     );
 };

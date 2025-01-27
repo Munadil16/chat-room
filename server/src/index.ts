@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { randomUUID, UUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { WebSocketServer, WebSocket } from "ws";
 
 dotenv.config();
@@ -113,5 +113,5 @@ wss.on("connection", (ws) => {
         }
     });
 
-    ws.on("close", () => {});
+    ws.on("close", () => { });
 });
