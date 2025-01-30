@@ -1,22 +1,24 @@
-import { StrictMode } from "react";
-import { RecoilRoot } from "recoil";
 import { createRoot } from "react-dom/client";
+import { StrictMode, Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "@/index.css";
 import App from "@/App";
-import { Home } from "@/pages/home";
-import { ChatRoom } from "@/pages/chat-room";
-import { JoinRoom } from "@/pages/join-room";
-import { CreateRoom } from "@/pages/create-room";
+
+const Home = lazy(() => import("@/pages/home").then(m => ({ default: m.Home })));
+const ChatRoom = lazy(() => import("@/pages/chat-room").then(m => ({ default: m.ChatRoom })));
+const JoinRoom = lazy(() => import("@/pages/join-room").then(m => ({ default: m.JoinRoom })));
+const CreateRoom = lazy(() => import("@/pages/create-room").then(m => ({ default: m.CreateRoom })));
+
+import { Loading } from "@/components/loading";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "@/components/providers";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <RecoilRoot>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <BrowserRouter>
+        <Providers>
+            <BrowserRouter>
+                <Suspense fallback={<Loading />}>
                     <Routes>
                         <Route path="/" element={<App />}>
                             <Route path="" element={<Home />} />
@@ -28,9 +30,9 @@ createRoot(document.getElementById("root")!).render(
                             <Route path="room/chat" element={<ChatRoom />} />
                         </Route>
                     </Routes>
-                </BrowserRouter>
-                <Toaster position="top-right" richColors />
-            </ThemeProvider>
-        </RecoilRoot>
+                </Suspense>
+            </BrowserRouter>
+            <Toaster position="top-right" richColors />
+        </Providers>
     </StrictMode>
 );
